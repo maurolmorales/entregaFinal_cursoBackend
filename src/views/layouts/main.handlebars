@@ -3,16 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/standard.css">
+  <link rel="stylesheet" href="/css/standard.css">
   <title>Entrega Final</title>
 </head>
 <body>
   <header>
     <h1>Entrega Final</h1>
-    <h2>{{title}}</h2>
+    <h2>{{pageTitle}}</h2>
+      <a href="idCart" class="cartDiv" >
+      <img src="/img/cart.svg" alt="cart">
+       <p>{{ countProd }}</p>
+      </a>
   </header>
   <main>
     {{{body}}}
   </main>
 </body>
+<script src="/js/addCart.js"></script>
 </html>

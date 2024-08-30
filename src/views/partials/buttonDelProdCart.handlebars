@@ -1,0 +1,8 @@
+{{!-- <form action="/carts/{{cid}}/products/{{pid}}" method="POST">
+  <input type="hidden" name="_method" value="DELETE" />
+  <input type="submit" value="Eliminar" class="submitSmall"/>
+</form> --}}
+
+<form method="POST" action="/carts/{{cid}}/products/{{pid}}?_method=DELETE" >
+  <input type="submit" class="submitSmall"/>
+</form>

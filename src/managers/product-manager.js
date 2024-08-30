@@ -1,31 +1,36 @@
 const Product = require("../models/product-model.js");
 
-const getAllProducts = async () => {
-  const products = await Product.find();
-  return products;
+const getAllProducts_manager = async (options) => {
+  try {
+    const products = await Product.paginate({}, options);
+    // .explain('executionStats');
+    return products;
+  } catch (error) {
+    throw new Error("Error al obtener los productos con paginación");
+  }
 };
 
-const createProduct = async (data) => {
+const createProduct_manager = async (data) => {
   const product = new Product(data);
   return await product.save();
 };
 
-const getOneProduct = async (id) => {
-  return await Product.findById();
+const getOneProduct_manager = async (id) => {
+  return await Product.findById(id);
 };
 
-const deleteOneProduct = async (id) => {
+const deleteOneProduct_manager = async (id) => {
   return await Product.findByIdAndDelete(id);
 };
 
-const updateOneProduct = async (id) => {
+const updateOneProduct_manager = async (id) => {
   return await Product.updateOneProduct(id);
 };
 
 module.exports = {
-  getAllProducts,
-  createProduct,
-  getOneProduct,
-  deleteOneProduct,
-  updateOneProduct
+  getAllProducts_manager,
+  createProduct_manager,
+  getOneProduct_manager,
+  deleteOneProduct_manager,
+  updateOneProduct_manager,
 };

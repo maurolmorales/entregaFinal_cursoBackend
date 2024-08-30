@@ -1,9 +1,8 @@
 {{>header}}
 
 <div class="container">
-  {{#each products}}
+  {{#each productsData}}
     <div>
-      <p><strong>ID: </strong> {{this.id}}</p>
       <p><strong>Name: </strong> {{this.title}}</p>
       <p><strong>Description: </strong> {{this.description}}</p>
       <p><strong>Code: </strong> {{this.code}}</p>
@@ -11,6 +10,20 @@
       <p><strong>Status: </strong>:{{this.status}}</p>
       <p><strong>Stock: </strong>:{{this.stock}}</p>
       <p><strong>Category: </strong>:{{this.category}}</p>
-    </div>
+      <a href="/products/{{this.id}}">
+        <img src="/img/article.svg" alt="article" class="submitSmallCart" />
+      </a>
+      {{> buttonAddCart param=this.id}}
+      {{!-- <button>Añadir al Carrito</button> --}}
+    </div>    
   {{/each}}
+  <nav class="pagination">
+    {{#if hasPrevPage}}
+      <a href="/products?page={{prevPage}}&limit=4">Anterior</a>
+    {{/if}}
+    <span>Página {{currentPage}} de {{totalPages}}</span>
+    {{#if hasNextPage}}
+      <a href="/products?page={{nextPage}}&limit=4">Siguiente</a>
+    {{/if}}
+  </nav>
 </div>

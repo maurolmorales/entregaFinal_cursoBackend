@@ -1,35 +1,63 @@
 const mongoose = require("mongoose");
 const {
-  getAllProducts,
-  getOneProduct,
-  createProduct,
-  deleteOneProduct,
-  updateOneProduct
+  getAllProducts_manager,
+  getOneProduct_manager,
+  createProduct_manager,
+  deleteOneProduct_manager,
+  updateOneProduct_manager,
 } = require("../managers/product-manager.js");
 
-const getAllProducts = async (req, res) => {
+
+const getAllProducts_controller = async (req, res) => {
   try {
-    const products = await getAllProducts();
-    res.status(200).json(products);
+    const { page = 1, limit = 4 } = req.query;
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      lean: true, 
+      //sort: { grade: -1 }, // Ordenar por calificación del mejor al peor
+    };
+    const products = await getAllProducts_manager(options);
+    //const productsData = JSON.parse(JSON.stringify(products));
+    // const result = products.paginate({}, options);
+
+    res.status(200).render("products", {
+      pageTitle: "Lista de Productos",
+      productsData: products.docs,
+      currentPage: products.page,
+      totalPages: products.totalPages,
+      hasPrevPage: products.hasPrevPage,
+      hasNextPage: products.hasNextPage,
+      prevPage: products.prevPage,
+      nextPage: products.nextPage,
+    });
+    // console.log('pre', productsData)
+    // return productsData
+
+    // res.status(200).render("products", { title: "Lista de Productos", productsData });
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener los productos" });
+    res.status(500).json(error.message);
   }
 };
 
-const getOneProduct = async(req, res)=>{
+const getOneProduct_controller = async (req, res) => {
   try {
-    const product = await getOneProduct(req.params.pid);
-    if (product) {
-      res.status(200).json(product);
+    const productFound = await getOneProduct_manager(req.params.pid);
+    console.log('encontrado', productFound)
+    if (productFound) {
+      const plainProduct = JSON.parse(JSON.stringify(productFound));
+      res.status(200)
+      // .json(productFound)
+      .render("idProduct",{pageTitle:"producto Seleccionado",plainProduct});
     } else {
       res.status(404).json({ error: "Producto no encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener un producto" });
+    res.status(500).json({ error: "Error al obtener un producto" }, error.message);
   }
-}
+};
 
-const createProduct = async (req, res) => {
+const createProduct_controller = async (req, res) => {
   try {
     const prodBody = req.body;
 
@@ -87,19 +115,21 @@ const createProduct = async (req, res) => {
       prodBody.category === "" ||
       prodBody.category == undefined
     ) {
-      return res.status(400).json({ error: "Category no válida o inexistente" });
+      return res
+        .status(400)
+        .json({ error: "Category no válida o inexistente" });
     }
 
-    const savedProduct = await createProduct(prodBody);
+    const savedProduct = await createProduct_manager(prodBody);
     return res.status(201).json(savedProduct);
   } catch (error) {
     return res.status(500).json({ error: "Error al crear el producto" });
   }
 };
 
-const deleteOneProduct = async (req, res) => {
+const deleteOneProduct_controller = async (req, res) => {
   try {
-    const product = await deleteOneProduct(req.params.pid);
+    const product = await deleteOneProduct_manager(req.params.pid);
     if (product) {
       res.status(200).json({ message: "Producto Eliminado" });
     } else {
@@ -110,10 +140,10 @@ const deleteOneProduct = async (req, res) => {
   }
 };
 
-const updateOneProduct = async (req, res) => {
+const updateOneProduct_controller = async (req, res) => {
   try {
     const prodBody = req.body;
-    const product = await updateOneProduct(req.params.pid, prodBody);
+    const product = await updateOneProduct_manager(req.params.pid, prodBody);
     if (product) {
       return res
         .status(200)
@@ -124,4 +154,12 @@ const updateOneProduct = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener un productos" });
   }
+};
+
+module.exports = {
+  getAllProducts_controller,
+  getOneProduct_controller,
+  createProduct_controller,
+  deleteOneProduct_controller,
+  updateOneProduct_controller,
 };

@@ -6,6 +6,7 @@ const exphbs = require("express-handlebars");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const routes = require("./routes/index.js");
+const methodOverride = require("method-override");
 const routerView = require("./routes/view.router.js");
 const {
   getAllProducts,
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(()=>{console.log('MONGO connected')})
   .catch((error)=>{console.error(error)})
 
+
 /*---- handlebars ------------------------------------------------------------------- */
 app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
@@ -31,6 +33,15 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/public")));
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
+
+/*----------------------------------------------------------------------- */
+app.use(methodOverride("_method"));
 
 /*---- socket conección ----------------------------------------------------------------- */
 io.on("connection", async (socket) => {
@@ -44,9 +55,12 @@ io.on("connection", async (socket) => {
   socket.on("deleteProduct", async (data) => { await deleteOneProduct(data) });
 });
 
+
+
 /*----------------------------------------------------------------------- */
-app.use("/api", routes);
-app.use("/", routerView);
+// app.use("/api", routes);
+app.use("/", routes);
+
 
 /*----------------------------------------------------------------------- */
 module.exports = { httpServer };

@@ -1,24 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getAllProducts,
-  createProduct,
-  getOneProduct,
-  deleteOneProduct,
-  updateOneProduct,
+  getAllProducts_controller,
+  createProduct_controller,
+  getOneProduct_controller,
+  deleteOneProduct_controller,
+  updateOneProduct_controller,
 } = require("../controllers/product-controller.js");
-// const { createProduct } = require("../managers/product-manager.js");
 
+router.get("/", getAllProducts_controller);
 
-router.get("/", getAllProducts);
+router.get("/:pid", getOneProduct_controller);
 
-router.get("/:pid", getOneProduct);
+router.post("/", createProduct_controller);
 
-router.post("/", createProduct);
+router.delete("/:pid", deleteOneProduct_controller);
 
-router.delete("/:pid", deleteOneProduct);
-
-router.patch("/:pid", updateOneProduct);
- 
+router.patch("/:pid", updateOneProduct_controller);
 
 module.exports = router;
