@@ -10,20 +10,21 @@
       <p><strong>Status: </strong>:{{this.status}}</p>
       <p><strong>Stock: </strong>:{{this.stock}}</p>
       <p><strong>Category: </strong>:{{this.category}}</p>
-      <a href="/products/{{this.id}}">
-        <img src="/img/article.svg" alt="article" class="submitSmallCart" />
-      </a>
+      <span class="commandButtons">
+        <a href="/products/{{this.id}}">
+          <img src="/img/article.svg" alt="article" class="submitSmallCart" />
+        </a>
       {{> buttonAddCart param=this.id}}
-      {{!-- <button>Añadir al Carrito</button> --}}
-    </div>    
+      </span>
+    </div>
   {{/each}}
   <nav class="pagination">
     {{#if hasPrevPage}}
-      <a href="/products?page={{prevPage}}&limit=4">Anterior</a>
+      <a href="/products/?page={{prevPage}}">Anterior</a>
     {{/if}}
     <span>Página {{currentPage}} de {{totalPages}}</span>
     {{#if hasNextPage}}
-      <a href="/products?page={{nextPage}}&limit=4">Siguiente</a>
+      <a href="/products/?page={{nextPage}}">Siguiente</a>
     {{/if}}
   </nav>
 </div>

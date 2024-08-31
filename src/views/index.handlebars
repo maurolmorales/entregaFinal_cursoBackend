@@ -1,98 +1,74 @@
 {{>header}}
+
 <section class="home">
   <article>
-
-    <p>
-      modificar el método GET / para que cumpla con los siguientes puntos:
-    </p>
-    <ul>
-      <li>
-        Deberá poder recibir por query params un limit (opcional), una page
-        (opcional), un sort (opcional) y un query (opcional):
-        <ul>
-          <li>
-            -limit permitirá devolver sólo el número de elementos solicitados al
-            momento de la petición, en caso de no recibir limit, éste será de
-            10.
-          </li>
-          <li>
-            page permitirá devolver la página que queremos buscar, en caso de no
-            recibir page, ésta será de 1.
-          </li>
-          <li>
-            query, el tipo de elemento que quiero buscar (es decir, qué filtro
-            aplicar), en caso de no recibir query, realizar la búsqueda general.
-          </li>
-          <li>
-            sort: asc/desc, para realizar ordenamiento ascendente o descendente
-            por precio, en caso de no recibir sort, no realizar ningún
-            ordenamiento.
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </article>
-  <hr />
-  <article>
-    <p>
-      El método GET deberá devolver un objeto con el siguiente formato:
-    </p>
-    <pre>
-      { 
-        <strong>status</strong>: success/error
-        <strong>payload</strong>: Resultado de los productos solicitados
-        <strong>totalPages</strong>: Total de páginas
-        <strong>prevPage</strong>: Página anterior 
-        <strong>nextPage</strong>: Página siguiente
-        <strong>page</strong>: Página actual
-        <strong>hasPrevPage</strong>: Indicador para saber si la página previa existe
-        <strong>hasNextPage</strong>: Indicador para saber si la página siguiente existe. 
-        <strong>prevLink</strong>: Link directo a la página previa (null si hasPrevPage=false)
-        <strong>nextLink</strong>: Link directo a la página siguiente (null si hasNextPage=false) 
-      }
-    </pre>
-    <p>Se deberá poder buscar productos por categoría o por disponibilidad, y se
-      deberá poder realizar un ordenamiento de estos productos de manera
-      ascendente o descendente por precio.</p>
+    <section>
+      <h1>ENTREGA DEL PROYECTO </h1>
+      <br>
+    </section>
+    <hr>
+    <section>
+      <h2>Páginas</h2>
+      <h3>Products:</h3>
+      <p>
+        Muestra una galería de productos con soporte para paginación, accesible mediante el controlador (getAllProducts). Los usuarios pueden filtrar los productos mediante query params, por ejemplo, ( /products/?sort=asc&query=Audio ). Cada ítem en la galería muestra detalles del producto y ofrece un enlace para ver más información (getOneProduct). Además, incluye un botón para agregar el producto al carrito con estado 'open'. Si no existe un carrito abierto, se crea uno automáticamente (addProdToCart).
+      </p>
+    </section>
+    <section>
+      <h3>Carts:</h3>
+      <p>
+        Muestra una galería de carritos con status 'complete' y 'open' (getAllCarts). Cada carrito lista la cantidad de productos que contiene, acompañados de un botón para eliminarlos (delProdToCart). También se muestra información como el ID del carrito, la fecha de creación y el status actual. Al final, se incluye una botonera que permite navegar al carrito seleccionado (getOneCart), vaciarlo de productos (emptyCart) o cerrarlo cambiando su status de 'open' a 'complete' (closeCart).
+      </p>
+    </section>
+    <section>
+      <h3>Real Time Products:</h3>
+      Implementado con Socket.IO, permite ingresar un producto a la base de datos a través de un formulario, reflejando instantáneamente el nuevo producto en una galería limitada a los 3 últimos ítems agregados. Cada ítem en la galería incluye un botón para eliminar el producto correspondiente (deleteOneProduct).
+    </section>
   </article>
   <hr>
   <article>
-    <p>
-      Además, agregar al router de carts los siguientes endpoints:
-    </p>
-    <ul>
-      <li>
-        DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
-      </li>
-      <li>
-        PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
-      </li>
-      <li>
-        PUT api/carts/:cid/products/:pid  deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad  pasada desde req.body
-      </li>
-      <li>
-        DELETE api/carts/:cid deberá eliminar todos los productos del carrito
-      </li>
-      <li>
-        Esta vez, para el modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. Modificar la ruta /:cid para que al traer todos los productos, los traiga completos mediante un “populate”. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
-      </li>
-    </ul>
-  </article>
-  <hr>
-  <article>
-    <p>
-      Modificar la vista index.handlebars en el router de views ‘/products’, creada en la  pre-entrega anterior, para visualizar todos los productos con su respectiva paginación.  Además, cada producto mostrado puede  resolverse de dos formas:
-    </p>
-    <ul>
-      <li>
-        Llevar a una nueva vista con el producto seleccionado con su descripción completa, detalles de precio, categoría, etc. Además de un botón para agregar al carrito. Sugerencia de la ruta: “/products/:pid”.
-      </li>
-      <li>
-        Contar con el botón de “agregar al carrito” directamente, sin necesidad de abrir una página adicional con los detalles del producto.
-      </li>
-      <li>
-        Además, agregar una vista en ‘/carts/:cid (cartId) para visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito.
-      </li>
-    </ul>
+    <h2>Estructura</h2>
+    <section>
+      <h3>Ruta Products:</h3>
+      <ul>
+        <li>
+          <strong> GET products/ </strong> Obtiene todos los productos
+        </li>
+        <li>
+          <strong> GET products/:pid </strong> Obtiene el producto indicado por id
+        </li>
+        <li>
+          <strong> POST products/ </strong> Crea un producto
+        </li>
+        <li>
+          <strong> PATCH products/:pid </strong> Actualiza un producto indicado por id
+        </li>
+        <li>
+          <strong> DELETE products/:pid </strong> Elimina un producto indicado por id
+        </li>
+      </ul>
+      <br>
+      <h3>Ruta Carts:</h3>
+      <ul>  
+        <li>
+          <strong> GET carts/ </strong> Obtiene todos los carritos
+        </li>
+        <li>
+          <strong> GET carts/:cid</strong> Obtiene el carrito indicado por id
+        </li>
+        <li>
+          <strong> POST carts/:pid</strong> Añade un producto indicado por id al carrito
+        </li>
+        <li>
+          <strong> PUT carts/:cid</strong> Actualiza el status del carrito a "Completed"
+        </li>
+        <li>
+          <strong> DELETE carts/:cid/products/:pid</strong> Elimina el producto indicado por id del carrito
+        </li>
+        <li>
+          <strong> DELETE carts/:cid</strong> Elimina la totalidad de productos del carrito
+        </li>
+      </ul>
+    </section>
   </article>
 </section>

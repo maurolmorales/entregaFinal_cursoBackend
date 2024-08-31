@@ -8,7 +8,5 @@ router.use("/carts", cartsRouter);
 router.use("/products", productsRouter);
 router.use("/", routerView);
 router.use("*", routerView);
-// router.use("*", (req, res) => { res.render("notFound") });
-// router.use('/', routerView);
 
 module.exports = router;

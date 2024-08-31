@@ -3,11 +3,11 @@
 <div class="container">
   <div>
     <ul>
-    {{#each products}}   
+    {{#each plainCart.products}}   
       <li>{{product.title}}</li>
     {{/each}}
     </ul>
-    <p>status: {{status}}</p>
-    <p>date: {{date}}</p>
+    <p>status: {{plainCart.status}}</p>
+    <p>date: {{plainCart.date}}</p>
   </div>
 </div>

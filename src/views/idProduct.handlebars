@@ -4,9 +4,9 @@
   <div>
     <h2>{{plainProduct.title}}</h2>
     <p>{{plainProduct.description}}</p>
-    <p>{{plainProduct.code}}</p>
-    <p>{{plainProduct.price}}</p>
-    <p>{{plainProduct.category}}</p>
-    <button>Añadir al Carrito</button>
+    <p>Código: {{plainProduct.code}}</p>
+    <p>Precio: {{plainProduct.price}}</p>
+    <p>Categoría: {{plainProduct.category}}</p>
+    {{>buttonAddCart param=plainProduct._id}}
   </div>
 </div>

@@ -7,34 +7,35 @@ const {
   updateOneProduct_manager,
 } = require("../managers/product-manager.js");
 
-
 const getAllProducts_controller = async (req, res) => {
   try {
-    const { page = 1, limit = 4 } = req.query;
+    const { limit = 10, page = 1, sort, query } = req.query;
     const options = {
-      page: parseInt(page),
       limit: parseInt(limit),
-      lean: true, 
-      //sort: { grade: -1 }, // Ordenar por calificación del mejor al peor
+      page: parseInt(page),
+      sort: sort ? {price: sort == 'asc' ? 1 : -1} : {}, // ordena por precio acendente
+      lean: true, // para devolver objetos planos.
     };
-    const products = await getAllProducts_manager(options);
-    //const productsData = JSON.parse(JSON.stringify(products));
-    // const result = products.paginate({}, options);
 
-    res.status(200).render("products", {
+    const filter = query ? {category: query } : {};
+
+    const products = await getAllProducts_manager(filter, options);
+    const productsData = await JSON.parse(JSON.stringify(products));
+    
+    return res.status(200).render("products", {
       pageTitle: "Lista de Productos",
-      productsData: products.docs,
+      status: 'success',
+      productsData: products.docs,// payload
       currentPage: products.page,
       totalPages: products.totalPages,
       hasPrevPage: products.hasPrevPage,
       hasNextPage: products.hasNextPage,
       prevPage: products.prevPage,
       nextPage: products.nextPage,
+      prevLink: products.hasPrevPage ? `/products?limit=${limit}&page=${products.prevPage}&sort=${sort}&query=${query}` : null,
+      nextLink: products.hasNextPage ? `/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&query=${query}` : null,
     });
-    // console.log('pre', productsData)
-    // return productsData
 
-    // res.status(200).render("products", { title: "Lista de Productos", productsData });
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -43,11 +44,9 @@ const getAllProducts_controller = async (req, res) => {
 const getOneProduct_controller = async (req, res) => {
   try {
     const productFound = await getOneProduct_manager(req.params.pid);
-    console.log('encontrado', productFound)
     if (productFound) {
       const plainProduct = JSON.parse(JSON.stringify(productFound));
       res.status(200)
-      // .json(productFound)
       .render("idProduct",{pageTitle:"producto Seleccionado",plainProduct});
     } else {
       res.status(404).json({ error: "Producto no encontrado" });
@@ -127,19 +126,6 @@ const createProduct_controller = async (req, res) => {
   }
 };
 
-const deleteOneProduct_controller = async (req, res) => {
-  try {
-    const product = await deleteOneProduct_manager(req.params.pid);
-    if (product) {
-      res.status(200).json({ message: "Producto Eliminado" });
-    } else {
-      res.status(404).json({ error: "Producto no encontrado" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener un productos" });
-  }
-};
-
 const updateOneProduct_controller = async (req, res) => {
   try {
     const prodBody = req.body;
@@ -156,10 +142,23 @@ const updateOneProduct_controller = async (req, res) => {
   }
 };
 
+const deleteOneProduct_controller = async (req, res) => {
+  try {
+    const product = await deleteOneProduct_manager(req.params.pid);
+    if (product) {
+      res.status(200).json({ message: "Producto Eliminado" });
+    } else {
+      res.status(404).json({ error: "Producto no encontrado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener un productos" });
+  }
+};
+
 module.exports = {
   getAllProducts_controller,
   getOneProduct_controller,
   createProduct_controller,
-  deleteOneProduct_controller,
   updateOneProduct_controller,
+  deleteOneProduct_controller
 };
